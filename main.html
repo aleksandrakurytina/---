@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phoenix Team — скаутинг и офферы</title>
+<style>
+  :root{
+    --bg:#0b0d12;
+    --bg2:#11141c;
+    --card:#161a24;
+    --card2:#1c212e;
+    --line:#252b3a;
+    --txt:#e8ecf5;
+    --muted:#8b93a7;
+    --acc:#ff7a2f;
+    --acc2:#ffb347;
+    --ok:#3ddc84;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--acc2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  img{max-width:100%;display:block}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(11,13,18,.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    max-width:1150px;margin:0 auto;padding:14px 20px;
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  }
+  .logo{
+    font-weight:800;font-size:19px;letter-spacing:.5px;
+    background:linear-gradient(90deg,var(--acc),var(--acc2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    white-space:nowrap;
+  }
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .nav-links a{
+    color:var(--muted);font-size:14px;font-weight:500;
+    padding:7px 12px;border-radius:9px;transition:.2s;
+  }
+  .nav-links a:hover{background:var(--card);color:var(--txt);text-decoration:none}
+
+  /* ---------- LAYOUT ---------- */
+  main{max-width:1150px;margin:0 auto;padding:0 20px 90px}
+  section{padding:56px 0 8px}
+  .sec-title{
+    font-size:26px;font-weight:800;letter-spacing:-.4px;
+    margin-bottom:6px;display:flex;align-items:center;gap:10px;
+  }
+  .sec-title .bar{
+    width:5px;height:26px;border-radius:4px;
+    background:linear-gradient(180deg,var(--acc),var(--acc2));
+    flex:0 0 auto;
+  }
+  .sec-sub{color:var(--muted);font-size:15px;margin-bottom:26px}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:76px 0 30px;text-align:center;
+  }
+  .hero h1{
+    font-size:clamp(30px,5.5vw,52px);font-weight:900;letter-spacing:-1.5px;
+    line-height:1.1;margin-bottom:16px;
+  }
+  .hero h1 span{
+    background:linear-gradient(90deg,var(--acc),var(--acc2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p{color:var(--muted);font-size:17px;max-width:640px;margin:0 auto 30px}
+  .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    display:inline-block;padding:13px 26px;border-radius:12px;
+    font-weight:700;font-size:15px;transition:.2s;border:1px solid transparent;
+  }
+  .btn-primary{
+    background:linear-gradient(90deg,var(--acc),var(--acc2));
+    color:#12141a;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px -8px var(--acc);text-decoration:none}
+  .btn-ghost{border-color:var(--line);color:var(--txt);background:var(--card)}
+  .btn-ghost:hover{border-color:var(--acc);text-decoration:none}
+
+  /* ---------- CARDS ---------- */
+  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);padding:24px;transition:.25s;
+  }
+  .card:hover{border-color:#39415a;transform:translateY(-3px);background:var(--card2)}
+  .card .ico{font-size:26px;margin-bottom:12px}
+  .card h3{font-size:17px;font-weight:700;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:14.5px}
+  .card .pay{
+    display:inline-block;margin-top:14px;padding:5px 12px;border-radius:8px;
+    background:rgba(61,220,132,.1);color:var(--ok);
+    font-size:13.5px;font-weight:700;
+  }
+
+  /* ---------- OFFERS ---------- */
+  .offer{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;display:flex;gap:18px;align-items:flex-start;
+  }
+  .offer .ico{font-size:28px;line-height:1}
+  .offer h3{font-size:17px;font-weight:700;margin-bottom:4px}
+  .offer p{color:var(--muted);font-size:14.5px}
+  .offer .price{
+    margin-left:auto;text-align:right;font-weight:800;color:var(--ok);
+    white-space:nowrap;font-size:15px;
+  }
+
+  /* ---------- ACCORDION ---------- */
+  .acc{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;margin-bottom:12px;
+  }
+  .acc-head{
+    padding:18px 22px;cursor:pointer;display:flex;align-items:center;gap:12px;
+    font-weight:700;font-size:15.5px;user-select:none;transition:.2s;
+  }
+  .acc-head:hover{background:var(--card2)}
+  .acc-head .chev{
+    margin-left:auto;color:var(--muted);transition:.3s;font-size:13px;
+  }
+  .acc.open .acc-head .chev{transform:rotate(180deg)}
+  .acc-body{
+    display:none;padding:0 22px 22px;color:var(--muted);font-size:14.5px;
+    border-top:1px solid var(--line);padding-top:18px;
+  }
+  .acc.open .acc-body{display:block}
+  .acc-body p{margin-bottom:12px}
+  .acc-body strong{color:var(--txt)}
+  .acc-body ul{margin:0 0 14px 20px}
+  .acc-body li{margin-bottom:6px}
+  .acc-body blockquote{
+    border-left:3px solid var(--acc);padding:10px 16px;margin:12px 0;
+    background:rgba(255,122,47,.06);border-radius:0 10px 10px 0;
+  }
+  .acc-body .tag{
+    display:inline-block;background:var(--bg2);border:1px solid var(--line);
+    padding:3px 10px;border-radius:7px;font-size:12.5px;color:var(--muted);
+    margin:3px 4px 3px 0;
+  }
+
+  /* ---------- FORMULA ---------- */
+  .formula{
+    display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+    margin:10px 0 4px;
+  }
+  .formula span{
+    background:var(--card2);border:1px solid var(--line);
+    padding:9px 18px;border-radius:11px;font-weight:700;font-size:14.5px;
+  }
+  .formula .plus{background:none;border:none;color:var(--acc);padding:9px 0}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);padding:34px 20px;text-align:center;
+    color:var(--muted);font-size:14px;margin-top:40px;
+  }
+  footer .logo{margin-bottom:8px}
+
+  /* ---------- TOAST ---------- */
+  #toast{
+    position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(120%);
+    background:var(--card2);border:1px solid var(--acc);color:var(--txt);
+    padding:13px 24px;border-radius:12px;font-size:14.5px;font-weight:600;
+    transition:.35s;z-index:200;box-shadow:0 14px 40px -10px #000;
+  }
+  #toast.show{transform:translateX(-50%) translateY(0)}
+
+  /* ---------- MOBILE ---------- */
+  @media(max-width:640px){
+    .nav-links{width:100%;margin-left:0;justify-content:flex-start}
+    .nav-links a{font-size:13px;padding:6px 9px}
+    section{padding:40px 0 4px}
+    .offer{flex-direction:column;gap:10px}
+    .offer .price{margin-left:0;text-align:left}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">𝗣𝗵𝗼𝗲𝗻𝗶𝘅 𝗧𝗲𝗮𝗺</div>
+    <nav class="nav-links">
+      <a href="#about">О нас</a>
+      <a href="#offers">Офферы</a>
+      <a href="#start">С чего начать</a>
+      <a href="#models">Моделям</a>
+      <a href="#ops">Операторам</a>
+      <a href="#traffic">Трафик</a>
+      <a href="#manuals">Мануалы</a>
+      <a href="#forms">Анкеты</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Скаутинг, офферы и <span>пассивный доход</span></h1>
+    <p>Мы — сообщество экспертов в скаутинге. Помогаем агентствам находить таланты,
+       а тебе — выстроить стабильный доход на поиске персонала для международных онлайн-платформ.</p>
+    <div class="btns">
+      <a href="#offers" class="btn btn-primary">Смотреть офферы</a>
+      <a href="#start" class="btn btn-ghost">С чего начать</a>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="sec-title"><span class="bar"></span>О нас</div>
+    <p class="sec-sub">Phoenix Team — кто мы и зачем ты здесь</p>
+    <div class="grid">
+      <div class="card">
+        <div class="ico">🎯</div>
+        <h3>Твоя задача</h3>
+        <p>Найти человека любым способом и передать контакты нам. Ты не тренер, не куратор
+           и не менеджер — ты делаешь первый шаг, дальше система работает без тебя.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🏢</div>
+        <h3>Наша задача</h3>
+        <p>Провести собеседование, обучить и вывести кандидата на работу. Мы работаем
+           с международными онлайн-платформами и продюсерскими проектами.</p>
+      </div>
+      <div class="card">
+        <div class="ico">💸</div>
+        <h3>Как ты зарабатываешь</h3>
+        <p>Кандидат дошёл до собеса → отработал смену → ты получил выплату.
+           Выплаты в 99% случаев — раз в неделю или раз в две недели в USDT.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🚀</div>
+        <h3>Почему с нами</h3>
+        <p>Самые крупные выплаты среди конкурентов, множество офферов,
+           обучение с нуля (1/1 звонок или помощь группы), готовые скрипты и аккаунты.</p>
+      </div>
+    </div>
+
+    <div class="formula">
+      <span>Доверие</span><span class="plus">+</span>
+      <span>Легенда</span><span class="plus">+</span>
+      <span>Серьёзность</span><span class="plus">+</span>
+      <span>Дефицит</span>
+    </div>
+  </section>
+
+  <!-- OFFERS -->
+  <section id="offers">
+    <div class="sec-title"><span class="bar"></span>Доступные офферы</div>
+    <p class="sec-sub">Выбери один тип кандидата, с которого начнёшь</p>
+
+    <div class="grid" style="grid-template-columns:1fr">
+      <div class="offer">
+        <div class="ico">📸</div>
+        <div>
+          <h3>Модель</h3>
+          <p>Стримерша, которая регулярно проводит стримы на западных площадках.
+             Есть как nude, так и no-nude форматы.</p>
+        </div>
+        <div class="price">$7 / рабочий день<br><span style="color:var(--muted);font-weight:500;font-size:12px">в течение года</span></div>
+      </div>
+
+      <div class="offer">
+        <div class="ico">🌐</div>
+        <div>
+          <h3>Оператор</h3>
+          <p>Сидит на стримах с моделью: настраивает эфир через OBS, контролирует качество,
+             фильтрует чат от негатива и спама.</p>
+        </div>
+        <div class="price">$15<br><span style="color:var(--muted);font-weight:500;font-size:12px">за прошедшего собеседование</span></div>
+      </div>
+
+      <div class="offer">
+        <div class="ico">🤖</div>
+        <div>
+          <h3>Агент / скаут</h3>
+          <p>Человек, который делает то же самое, что и мы с тобой — находит людей
+             под офферы и передаёт их в команду.</p>
+        </div>
+        <div class="price">$40<br><span style="color:var(--muted);font-weight:500;font-size:12px">за результативного</span></div>
+      </div>
+
+      <div class="offer">
+        <div class="ico">💳</div>
+        <div>
+          <h3>OnlyFans модель</h3>
+          <p>Сдаёт контент-план и получает процент от оборота страницы.
+             Сумма варьируется в зависимости от внешности и возраста.</p>
+        </div>
+        <div class="price">$700–1200<br><span style="color:var(--muted);font-weight:500;font-size:12px">за каждую</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- START -->
+  <section id="start">
+    <div class="sec-title"><span class="bar"></span>С чего начать</div>
+    <p class="sec-sub">Три шага, прежде чем искать людей</p>
+
+    <div class="acc open">
+      <div class="acc-head">1️⃣ Кто ты и как всё устроено <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>Добро пожаловать 👋</strong></p>
+        <p>Прежде чем читать дальше — пойми одну вещь. Твоя задача одна:
+           <strong>найти человека → привести на собеседование</strong>. Всё.</p>
+        <p>Ты не тренер, не куратор, не менеджер. Ты не объясняешь как работать
+           и не контролируешь смены. Ты — тот, кто находит людей и делает первый шаг.
+           Дальше система работает без тебя.</p>
+        <p><strong>💸 Как ты зарабатываешь?</strong><br>
+           Кандидат дошёл до собеса ➡️ отработал смену ➡️ ты получил выплату 💲</p>
+        <p><strong>📌 Задание.</strong> Выбери один тип кандидата, с которого начнёшь.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">2️⃣ Что мы предлагаем <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p>Прежде чем искать людей — ты должен сам понять, что предлагаешь.
+           Если ты не понимаешь — это почувствуют сразу.</p>
+
+        <p><strong>📸 Что предлагаем моделям?</strong></p>
+        <ul>
+          <li>Удалённая работа из любой точки мира.</li>
+          <li>Прямые эфиры для зарубежной аудитории — флирт, общение, в рамках закона.</li>
+          <li>Без интима, без обнажения (NO-NUDE).</li>
+          <li>Студия подключается удалённо, обучает и ведёт полностью.</li>
+          <li>Выплата — ежедневно.</li>
+        </ul>
+        <blockquote>Вопрос, который зададут первым: «Это порно?» → Нет. Формат стримов NO-NUDE.
+          Нарушения — мгновенное увольнение. Аудитория западная, на СНГ ставится блок.</blockquote>
+
+        <p><strong>👤 Что предлагаем оператору?</strong></p>
+        <ul>
+          <li>Удалённая работа.</li>
+          <li>Управление эфиром за кадром: запуск через OBS, контроль качества, модерация чата.</li>
+          <li>На экране не появляется.</li>
+          <li>Обучают с нуля.</li>
+          <li>$600–700/мес на старте.</li>
+        </ul>
+        <blockquote>Вопрос, который зададут: «А что за стримы?» → Прямые эфиры для зарубежной
+          аудитории. Формат — общение и флирт, без 18+.</blockquote>
+
+        <p><strong>🤖 Если ищешь скаута:</strong></p>
+        <ul>
+          <li>Партнёрская программа — находишь людей для онлайн-студий, получаешь выплату
+              за каждого привлечённого человека на различный оффер.</li>
+          <li>Удалённо, свободный график, обучение есть.</li>
+        </ul>
+        <p><strong>📌 Задание.</strong> 2–3 предложения, как бы ты предложил и объяснил
+           работу другу. Не копируй текст выше — именно своими словами.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">3️⃣ Где искать трафик <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>⚡️ Adult board.</strong> Хороший источник трафика для операторов и скаутов,
+           но нормальных моделей тут нет. Также можно заводить операторов из тематических
+           групп зарубежных стран с низкой зп: <strong>Иран, Куба, Индия, Вьетнам, Египет.</strong></p>
+
+        <p><strong>💚 Дейтинг (для моделей).</strong> Твоя цель — общаться с девушками 1–2 дня,
+           войти в максимальное доверие как близкая интернет-подруга, а затем включить
+           чистую психологию, чтобы она сама умоляла взять её на работу.</p>
+
+        <p><strong>😄 ВКонтакте</strong> · <strong>📷 Инстаграм</strong> ·
+           <strong>🕊🤖 Reddit, Twitter</strong></p>
+
+        <p><strong>👥 Самый нераспространённый вариант — знакомые.</strong> Да-да, я не шучу.
+           Выбери 5–10 человек, которым реально может подойти, и отпиши им.</p>
+
+        <blockquote>‼️ Запомни: минимум <strong>100–120 касаний в день с одного аккаунта</strong>.
+          Меньше 100–120 — результата не будет, это просто факт.</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODELS -->
+  <section id="models">
+    <div class="sec-title"><span class="bar"></span>Моделям</div>
+    <p class="sec-sub">Требования к лиду, о компании, график, стажировка и заработок</p>
+
+    <div class="acc">
+      <div class="acc-head">Требования к девушке (чек-лист лида) <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>Внешность:</strong> формат стримов — NON-NUDE, то есть строго разговорные
+           трансляции, блоги, гейминг, общение, никакого обнажения. Требования максимально
+           мягкие: просто обычная девушка, но и супермодели приветствуются.</p>
+        <p><strong>Стоп-фильтр:</strong> девушки с сильным избыточным весом или откровенно
+           неухоженные. Они банально не соберут донаты, а такие никому не нужны.</p>
+        <p><strong>Возраст и документы:</strong> строго от 18 до 27 лет. Меньше — даже
+           не рассматриваются. Старше — в редких случаях, если внешний вид компенсирует.
+           Обязательно должен быть паспорт (любой) для верификации.</p>
+        <p><strong>География (ГЕО):</strong> в приоритете СНГ (Казахстан, Россия, Беларусь,
+           Узбекистан, Кыргызстан и т.д.). Рассматривается любое ГЕО, кроме стран Африки.</p>
+        <blockquote><strong>Пример лида:</strong> девушка 21 год, Россия, ведёт соцсети или
+          обычная девушка, имеет телефон и/или ноутбук, свободна 3+ часа в день,
+          любит общение и стримы.</blockquote>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">О компании <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p>Мы продюсерский центр, который занимается раскруткой и продвижением различных
+           проектов и онлайн-сервисов. Девушки работают на новых стриминговых площадках,
+           чтобы поднять популярность этих площадок, за что и получают хорошие деньги.</p>
+        <p>Если спрашивает, есть ли сайт — кидаем: <a href="https://stream-models.info/" target="_blank" rel="noopener">stream-models.info</a></p>
+        <p><strong>Знание английского:</strong> переживать не стоит, опытные сотрудники помогут.
+           Но если с английским хорошо — будет плюсом.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">График, стажировка, обязанности <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>График:</strong> модель выбирает удобный для себя график и выстраивает
+           его каждую неделю на неделю вперёд. Прекрасно совмещается с учёбой.</p>
+        <p><strong>Стажировка:</strong> 3 дня по 7 часов, включая перерыв на полчаса.
+           Стажировка оплачивается — оплата в тот же день, далее раз в неделю каждый понедельник.
+           Выплаты на стажировке: от 3 до 5 тысяч рублей в день (в среднем).</p>
+        <p><strong>Обязанности:</strong> ведение прямых эфиров, социальных сетей, продумывание
+           контент-плана и тесное сотрудничество с командой по продвижению и креативу.
+           Главная задача — заинтересовать аудиторию и оставить её на площадке.</p>
+        <p><strong>Контент:</strong> темы абсолютно разные — книги, фильмы, музыка, сериалы,
+           путешествия, искусство. Можно монетизировать свои хобби: танцы, пение,
+           музыкальные инструменты, рисование.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">Куратор, заработок, донаты, площадки <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>Куратор:</strong> на всех этапах модели помогает её продюсер — всё показывает,
+           объясняет и находится рядом. У продюсера есть креативная команда, с которой
+           продумывается контент-план.</p>
+        <p><strong>Заработок:</strong> по статистике начинается от 80 тысяч рублей и растёт.
+           Золотых гор обещать не стоит, но зарабатывать можно очень хорошо.
+           Складывается из монетизации аккаунтов и стримов.</p>
+        <p><strong>Донаты:</strong> поддержка от аудитории — за приятную беседу, интересный
+           контент, подарочки в виде стикеров (розочки и т.п.). Есть общие чаты, где скидывают
+           донаты, а также личные чаты с поминутным заработком.</p>
+        <p><strong>Пробные смены:</strong> 3 смены, потому что компания покупает промо-период
+           на 21 час (3 дня по 7). Благодаря промо аккаунт в топе, можно охватить большую
+           аудиторию и хорошо заработать. После — дополнительное собеседование и итоги.</p>
+        <p><strong>Площадки:</strong> если девушку сильно интересует — отвечаем, что сейчас
+           есть заказ на продвижение <strong>Bigo Live</strong> и <strong>Hola</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPERATORS -->
+  <section id="ops">
+    <div class="sec-title"><span class="bar"></span>Операторам</div>
+    <p class="sec-sub">Что за работа, требования к железу и условия</p>
+
+    <div class="acc">
+      <div class="acc-head">Суть работы и формат стримов <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p>Суть работы — общение: стримы на западных платформах.</p>
+        <p>Есть два формата: <strong>no-nude</strong> — просто общение, показ сердечек;
+           <strong>nude</strong> — помимо разговоров выполняется приватное шоу. Модель выбирает сама.</p>
+        <p>Сайты, с которыми сотрудничаем, нацелены на Европу и США — знакомых из РФ
+           не встретить, полная конфиденциальность.</p>
+        <p><strong>По зп:</strong> для no-nude обычно $1500–2000 за месяц,
+           за показ шоу может доходить до $3000 и выше. Выплаты сразу после смены,
+           на карту любой страны или криптовалютой.</p>
+        <p>Работа происходит с оператором — человеком, который общается полностью за модель.
+           У модели есть панель, где видно все заработки со всех сайтов и свой график.</p>
+        <p>Стримы 5–6 часов, график полностью гибкий — когда хочешь, тогда выходишь,
+           но от этого зависит зарплата.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">Требования к ПК и условия <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>Требования:</strong></p>
+        <ul>
+          <li>Возраст 18+.</li>
+          <li>ПК/ноутбук: Intel i5 (10-го поколения) или AMD аналог.</li>
+          <li>Видеокарта: GTX 1060+.</li>
+          <li>ОЗУ: 16 GB+.</li>
+          <li>Стабильный интернет (от 100 Мбит/с).</li>
+          <li>Гарнитура с микрофоном.</li>
+          <li>Базовая грамотность и коммуникабельность.</li>
+        </ul>
+        <p><strong>Условия:</strong> график 4/3 или 5/2 на выбор, смены от 6 часов в день.
+           Выплаты: в 1-ю неделю — ежедневно, далее — каждый вторник.</p>
+        <p><strong>Доход:</strong> 25% от оборота страницы модели. Средний старт — от $850,
+           опытные операторы зарабатывают $1500–2000+.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">Что отвечать модели на частые вопросы <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>«Это вебкам?»</strong> — Нет. Формат NO-NUDE, нарушения — мгновенное увольнение.
+           Аудитория западная, на СНГ ставится блок.</p>
+
+        <p><strong>«А на каких площадках стримы?»</strong> — Площадки no-nude: трово, кик, бусти,
+           биго, танго и др. Работаем с площадками, где сидят богатые люди, которые хотят
+           расслабиться и пообщаться с красивой девушкой.</p>
+
+        <p><strong>«А что делать-то надо?»</strong> — Вы просто сидите и болтаете с западной
+           аудиторией, как все популярные блогеры. Сейчас большой тренд у запада на СНГ людей —
+           им интересно узнать, как мы живём. Зп сразу после стрима и довольно хорошая.
+           Если интересно — могу отправить примеры стримов и связать с девочками, которые
+           уже работают, чтобы поговорить в звонке.</p>
+
+        <p><strong>«За что так много платят, если это не вебкам?»</strong> — Мы работаем
+           с площадками, где сидят богатые люди, которые хотят внимания и общения.
+           Есть разные виды стримов: один включает показ шоу (nude), другой (no-nude) —
+           где девочки просто общаются.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">Стартовое сообщение для рассыла (no-nude) <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <blockquote>
+          Приветик! ✨ Случайно увидела твой профиль, решила спросить. Я сейчас ищу девчонок
+          на подмену для ведения трансляций (пока я в отпуске). Это обычные эфиры, без всякой
+          жести и раздеваний, я сама там давно. По деньгам выходит очень прилично (от 150к).
+          Если хочешь узнать подробности, маякни, всё расскажу)
+        </blockquote>
+        <blockquote>
+          Приветик 💕 увидела тебя и решила написать. В общем мне нужны девочки на трансляции,
+          пока меня не будет. зп от 1500$. Сразу скажу, это не вебкам и так далее.
+          Я сама там работаю, всё норм. Если интересно — обсудим детали?
+        </blockquote>
+        <blockquote>
+          Привет-привет! 👋 Ищу девочек для проведения эфиров, нужны девочки на моё место,
+          пока я отдыхаю. Сразу говорю: это не вебкам и ничего подобного. Оплата от 2000$
+          в месяц. Работа несложная, я сама в этой сфере. Если интересно — пиши, поболтаем)
+        </blockquote>
+        <p><strong>P.S.</strong> Не советую тупо копировать и идти рассылать — закиньте
+           в нейронку, попросите суть оставить, но текст переделать.</p>
+        <p>Такие площадки упоминаем, если модель не знает, что это вебка:
+           <span class="tag">трово</span><span class="tag">кик</span><span class="tag">бусти</span>
+           <span class="tag">биго лайф</span><span class="tag">Superlife</span> и др.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAFFIC -->
+  <section id="traffic">
+    <div class="sec-title"><span class="bar"></span>Трафик и инструменты</div>
+    <p class="sec-sub">Где искать моделей, операторов и скаутов</p>
+
+    <div class="acc">
+      <div class="acc-head">📌 Adult доски и xjobber <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p>Есть сайт <a href="https://xjobber.com/" target="_blank" rel="noopener">xjobber.com</a> —
+           там можно опубликовать объявление, оттуда хороший трафик операторов и скаутов.
+           Для этого нужно опубликовать вакансию в определённых группах тг, которые указаны
+           в инструкции на сайте, и поднять объявление. Обычно объявление появляется на сайте
+           через 2–3 часа после публикации в группах.</p>
+        <p>Можно также юзать зарубежные доски и оттуда приглашать операторов.
+           И ещё — в тематических группах Ирана, Индии и т.д., где маленькие зп.</p>
+        <blockquote>Обязательно перед рассылкой просите ИИ перефразировать текст без изменения
+          смысла, чтобы сайт не блокировал ваши рассылки.</blockquote>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">📌 Дейтинг-боты <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>Бесплатные:</strong></p>
+        <p>
+          <a href="https://t.me/bibinto_bot" target="_blank" rel="noopener">@bibinto_bot</a> ·
+          <a href="https://t.me/leomatchbot" target="_blank" rel="noopener">@leomatchbot</a> ·
+          <a href="https://t.me/mimoletbot" target="_blank" rel="noopener">@mimoletbot</a> ·
+          <a href="https://t.me/ashqua" target="_blank" rel="noopener">@ashqua</a> ·
+          <a href="https://t.me/DategramAppBot" target="_blank" rel="noopener">@DategramAppBot</a>
+        </p>
+        <p><strong>Платные:</strong></p>
+        <p>
+          <a href="https://t.me/kiss_datingbot" target="_blank" rel="noopener">@kiss_datingbot</a> ·
+          <a href="https://t.me/ObojudnoBot" target="_blank" rel="noopener">@ObojudnoBot</a> ·
+          <a href="https://t.me/fastlovetg_bot" target="_blank" rel="noopener">@fastlovetg_bot</a> ·
+          <a href="https://t.me/loverdating_bot" target="_blank" rel="noopener">@loverdating_bot</a> ·
+          <a href="https://t.me/siomiobot" target="_blank" rel="noopener">@siomiobot</a> ·
+          <a href="https://t.me/FaceMeet_bot" target="_blank" rel="noopener">@FaceMeet_bot</a> ·
+          <a href="https://t.me/blurrr_dating_bot" target="_blank" rel="noopener">@blurrr_dating_bot</a> ·
+          <a href="https://t.me/RusDateChatBot" target="_blank" rel="noopener">@RusDateChatBot</a> ·
+          <a href="https://t.me/Buddy_love_bot" target="_blank" rel="noopener">@Buddy_love_bot</a> ·
+          <a href="https://t.me/TON_Lovebot" target="_blank" rel="noopener">@TON_Lovebot</a> ·
+          <a href="https://t.me/xo_xo" target="_blank" rel="noopener">t.me/xo_xo</a>
+        </p>
+        <p><strong>Боты для поиска тимейтов:</strong>
+          <a href="https://t.me/rainfall_teammate_bot" target="_blank" rel="noopener">@rainfall_teammate_bot</a> ·
+          <a href="https://t.me/pose5_bot" target="_blank" rel="noopener">@pose5_bot</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">📌 Полезные ссылки <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <ul>
+          <li><a href="https://twiboost.com/ref4428373" target="_blank" rel="noopener">twiboost.com</a> — сайт для накрутки</li>
+          <li><a href="https://www.reddit.com/r/CamGirlProblems/" target="_blank" rel="noopener">r/CamGirlProblems</a> — вебкам-модели обсуждают свои проблемы</li>
+          <li><a href="https://lzt.market/" target="_blank" rel="noopener">lzt.market</a> — покупка аккаунтов</li>
+          <li><a href="https://teletype.in/@flowxzzz/y0GL7Vzvh-6" target="_blank" rel="noopener">Доп. инфа по дейтингу (1)</a></li>
+          <li><a href="https://teletype.in/@flowxzzz/IJuI_K4E5eU" target="_blank" rel="noopener">Доп. инфа по дейтингу (2)</a></li>
+          <li><a href="https://telegra.ph/Sposob-privlecheniya-cherez-sajty-znakomstv-i-gramotnaya-obrabotka-vozrazhenij-02-11" target="_blank" rel="noopener">Способ привлечения через сайты знакомств</a></li>
+          <li><a href="https://teletype.in/@xunzored/1WSkXULino7" target="_blank" rel="noopener">Доп. инфа по Инстаграму</a></li>
+          <li><a href="https://reforma-lab.com/kak-ubedit-cheloveka" target="_blank" rel="noopener">Как убедить человека</a></li>
+          <li><a href="https://xn--b1abqffracbogz7j.xn--p1ai/blog/kak-nauchitsya-ubezhdat-lyudej-priemy/" target="_blank" rel="noopener">Как научиться убеждать людей</a></li>
+        </ul>
+        <p><strong>Бот для вбива анкет:</strong>
+          <a href="https://t.me/vbiver1_bot" target="_blank" rel="noopener">@vbiver1_bot</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANUALS -->
+  <section id="manuals">
+    <div class="sec-title"><span class="bar"></span>Мануалы</div>
+    <p class="sec-sub">Инстаграм, дейтинг, TFP-чаты и регламенты</p>
+
+    <div class="acc">
+      <div class="acc-head">📷 Регламент работы с девушками из Instagram <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p>Твоя цель — как можно больше отправленных качественных сообщений.
+           Заинтересовать девушку предложением и потом закрыть её на работу.</p>
+        <p><strong>1.</strong> Купи хороший инстаграм-аккаунт. Отлега 2–3 года, хороший продавец,
+           первые сутки ничего особо не делать, потом наращивать активность.
+           Купить можно здесь: <a href="https://lzt.market/" target="_blank" rel="noopener">lzt.market</a>.</p>
+        <p><strong>2.</strong> Оформляем под девушку: живая, активная, относительно богатая,
+           но при этом простая и симпатичная. Дропаем актуальные, посты, сторис.
+           Можно сделать накрутку подписчиков/лайков — сильно повысит доверие.</p>
+        <p><strong>3.</strong> Ищем аккаунты на женскую тематику («Anna Eyelashes»,
+           «Вика брови» и т.д.), заходим во вкладку подписчики и отправляем предложение.
+           Пример скрипта: «Ты невероятно красивая. Подскажи, ты открыта к новым проектам?»,
+           «Привеет, ты очень красивая, не хочешь себя попробовать в интересных проектах?».</p>
+        <p><strong>4.</strong> Себя позиционируем как девушку, которая сама работает стримершой
+           уже долгое время и зарабатывает хорошие деньги. К людям, которые сами там работают,
+           куда выше доверия, чем к менеджеру. На вопрос «А тебе какая выгода?» отвечайте:
+           «Попался твой профиль и не могла устоять не написать тебе ахха, ты реально идеально
+           подходишь нам)».</p>
+        <p><strong>5.</strong> Рассказываем условия и закрываем страхи: «А это вебкам?»,
+           «А это обман?». Она должна видеть, что это крупная международная легальная компания.
+           Упоминайте, что проведут официально онлайн-собеседование — это бустит доверие.</p>
+        <blockquote>Девушек в день отписывать нужно очень много, минимум около 150.
+          Кулдаун 2–3 секунды между отписями, после 100–150 аккаунтов — перерыв 10–20 минут.
+          Лучше иметь 2 аккаунта, чтобы менять их постоянно. Маленькое количество ответов —
+          абсолютная норма.</blockquote>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">💚 Регламент работы с девушками из ботов/сайтов знакомств <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p>Твоя цель — общаться с девушками 1–2 дня, войти в максимальное доверие как близкая
+           интернет-подруга, а затем включить чистую психологию, чтобы она сама умоляла взять
+           её на работу.</p>
+        <p><strong>Анкета:</strong> симпатичная девушка (обычная, не супер-модель), возраст 22 года,
+           город либо не указываем, либо ставим не слишком большой, например Новосибирск.
+           После этого ведём живую активность на сайте/в боте, чтобы не получить теневой бан.</p>
+        <p><strong>🔤 Вход в доверие:</strong> обычный живой трёп. Обсуждаете парней, шмотки,
+           учёбу, то, как заебала рутина и отсутствие денег. Ты должна звучать как реальная
+           простая девушка. О работе если диалог заходит — дальше не давим, не спугиваем,
+           просто можно закинуть удочку на будущее.</p>
+        <p><strong>🔤 Зависть и интрига:</strong> на второй день нативно вбрасываешь в диалог
+           свой лайфстайл, где у тебя всё круто. Пример: «Извини, что долго отвечаю, я просто
+           тут сижу на стриме, за эту неделю заработала больше обычного, сижу выбираю шмотки
+           теперь, голова кругом уже ахаахах». Шаблоны подгоняйте под себя.</p>
+        <p><strong>🔤 Продажа без продажи:</strong> девчонка неизбежно спросит: «Ого, а что за
+           стримы? Вебкам? Онлифанс?». Ответ должен мгновенно снять страх: «Да не, ты чё,
+           какой вебкам, я себя на помойке не находила) Обычные стримы просто за зарплату».
+           Дальше: «Ну нам платят за то, что мы по сути раскручиваем новые площадки типо твича
+           плюс ещё донатики кидают».</p>
+        <p><strong>🔤 Искусственный дефицит:</strong> если её интересует это и она кайфует
+           от подобного заработка: «Кстати я думаю тебе бы подошло, но у нас вроде места
+           закончились((», дальше: «Но слушай, я могу попробовать договориться за тебя,
+           как за подругу))». Вуа-ля — она уже думает, что ты ей помогаешь.</p>
+        <p><strong>Боты для дейтинга:</strong> см. раздел «Трафик и инструменты».</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">🔗 TFP-чаты <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>Бесплатные (72 чата):</strong>
+          <a href="https://t.me/addlist/3H4j6cB-H700NzUx" target="_blank" rel="noopener">папка чатов</a></p>
+        <p><strong>Зарубеж:</strong>
+          <a href="https://t.me/addlist/AglK2_Awre9kOTFi" target="_blank" rel="noopener">папка чатов</a></p>
+        <p><strong>Платные:</strong>
+          <a href="https://t.me/addlist/ohfuzsE1lycyYjdk" target="_blank" rel="noopener">папка чатов</a></p>
+        <p><strong>Отдельные TFP-чаты:</strong></p>
+        <p>
+          <a href="https://t.me/tfpminskby" target="_blank" rel="noopener">tfpminskby</a> ·
+          <a href="https://t.me/kharkiv_tfp" target="_blank" rel="noopener">kharkiv_tfp</a> ·
+          <a href="https://t.me/tfpmodcam" target="_blank" rel="noopener">tfpmodcam</a> ·
+          <a href="https://t.me/tfpmodelsminsk" target="_blank" rel="noopener">tfpmodelsminsk</a> ·
+          <a href="https://t.me/tfphub_kyiv" target="_blank" rel="noopener">tfphub_kyiv</a> ·
+          <a href="https://t.me/tfp_moscow_castings" target="_blank" rel="noopener">tfp_moscow_castings</a> ·
+          <a href="https://t.me/ph_sahar_hp" target="_blank" rel="noopener">ph_sahar_hp</a> ·
+          <a href="https://t.me/tfp_pro" target="_blank" rel="noopener">tfp_pro</a> ·
+          <a href="https://t.me/tfpmodelgrodno" target="_blank" rel="noopener">tfpmodelgrodno</a> ·
+          <a href="https://t.me/tfp_model_kzn" target="_blank" rel="noopener">tfp_model_kzn</a> ·
+          <a href="https://t.me/tfp_moscow_casting" target="_blank" rel="noopener">tfp_moscow_casting</a> ·
+          <a href="https://t.me/tfpclub" target="_blank" rel="noopener">tfpclub</a> ·
+          <a href="https://t.me/tfp_ge" target="_blank" rel="noopener">tfp_ge</a> ·
+          <a href="https://t.me/moskva_tfp" target="_blank" rel="noopener">moskva_tfp</a> ·
+          <a href="https://t.me/tfpkievmodels" target="_blank" rel="noopener">tfpkievmodels</a> ·
+          <a href="https://t.me/tfpdeutschland" target="_blank" rel="noopener">tfpdeutschland</a> ·
+          <a href="https://t.me/photovideotfp" target="_blank" rel="noopener">photovideotfp</a> ·
+          <a href="https://t.me/phototfpisrael" target="_blank" rel="noopener">phototfpisrael</a> ·
+          <a href="https://t.me/tfp_mscity" target="_blank" rel="noopener">tfp_mscity</a> ·
+          <a href="https://t.me/tfp_spbmsk" target="_blank" rel="noopener">tfp_spbmsk</a> ·
+          <a href="https://t.me/tfp77" target="_blank" rel="noopener">tfp77</a> ·
+          <a href="https://t.me/modelmoskvatfp" target="_blank" rel="noopener">modelmoskvatfp</a> ·
+          <a href="https://t.me/tfpby" target="_blank" rel="noopener">tfpby</a> ·
+          <a href="https://t.me/tfp_tbilisi_ge" target="_blank" rel="noopener">tfp_tbilisi_ge</a> ·
+          <a href="https://t.me/tfp_moskval" target="_blank" rel="noopener">tfp_moskval</a> ·
+          <a href="https://t.me/tfp_msk_models" target="_blank" rel="noopener">tfp_msk_models</a> ·
+          <a href="https://t.me/moskvatfp" target="_blank" rel="noopener">moskvatfp</a> ·
+          <a href="https://t.me/massovkifood" target="_blank" rel="noopener">massovkifood</a> ·
+          <a href="https://t.me/tfp_cheb" target="_blank" rel="noopener">tfp_cheb</a> ·
+          <a href="https://t.me/tfp_bali_models" target="_blank" rel="noopener">tfp_bali_models</a> ·
+          <a href="https://t.me/the_creators_path" target="_blank" rel="noopener">the_creators_path</a> ·
+          <a href="https://t.me/tfp_model_kzn_byuti" target="_blank" rel="noopener">tfp_model_kzn_byuti</a> ·
+          <a href="https://t.me/tfp_modeling_moscow" target="_blank" rel="noopener">tfp_modeling_moscow</a> ·
+          <a href="https://t.me/tfphub_od" target="_blank" rel="noopener">tfphub_od</a> ·
+          <a href="https://t.me/tfpportugal" target="_blank" rel="noopener">tfpportugal</a> ·
+          <a href="https://t.me/model_TFP_msk" target="_blank" rel="noopener">model_TFP_msk</a> ·
+          <a href="https://t.me/modeli_tfp_msk" target="_blank" rel="noopener">modeli_tfp_msk</a> ·
+          <a href="https://t.me/tvorchiludi" target="_blank" rel="noopener">tvorchiludi</a> ·
+          <a href="https://t.me/Tfphub_dnipro" target="_blank" rel="noopener">Tfphub_dnipro</a> ·
+          <a href="https://t.me/tfp_batumi_ge" target="_blank" rel="noopener">tfp_batumi_ge</a> ·
+          <a href="https://t.me/tfp_models_spb" target="_blank" rel="noopener">tfp_models_spb</a> ·
+          <a href="https://t.me/promo_casting_tvp" target="_blank" rel="noopener">promo_casting_tvp</a> ·
+          <a href="https://t.me/moskvatfpmodels" target="_blank" rel="noopener">moskvatfpmodels</a> ·
+          <a href="https://t.me/tfpmodeldubai" target="_blank" rel="noopener">tfpmodeldubai</a> ·
+          <a href="https://t.me/beogradtfp" target="_blank" rel="noopener">beogradtfp</a> ·
+          <a href="https://t.me/gruziya_tfp" target="_blank" rel="noopener">gruziya_tfp</a> ·
+          <a href="https://t.me/tfpkiev" target="_blank" rel="noopener">tfpkiev</a> ·
+          <a href="https://t.me/TFPminskmodels" target="_blank" rel="noopener">TFPminskmodels</a> ·
+          <a href="https://t.me/tfpsmrr" target="_blank" rel="noopener">tfpsmrr</a> ·
+          <a href="https://t.me/tfp_mscgroup" target="_blank" rel="noopener">tfp_mscgroup</a> ·
+          <a href="https://t.me/MV_TFP" target="_blank" rel="noopener">MV_TFP</a> ·
+          <a href="https://t.me/katya_model_chat" target="_blank" rel="noopener">katya_model_chat</a> ·
+          <a href="https://t.me/tfp_modeling_piter" target="_blank" rel="noopener">tfp_modeling_piter</a> ·
+          <a href="https://t.me/model_sp" target="_blank" rel="noopener">model_sp</a> ·
+          <a href="https://t.me/models_tfp_msk_chat" target="_blank" rel="noopener">models_tfp_msk_chat</a> ·
+          <a href="https://t.me/tfpmodelswarsaw" target="_blank" rel="noopener">tfpmodelswarsaw</a> ·
+          <a href="https://t.me/ishchumodel_spb" target="_blank" rel="noopener">ishchumodel_spb</a> ·
+          <a href="https://t.me/modeli_moskve" target="_blank" rel="noopener">modeli_moskve</a> ·
+          <a href="https://t.me/turciya_tfp" target="_blank" rel="noopener">turciya_tfp</a> ·
+          <a href="https://t.me/tfpmodelkirovv" target="_blank" rel="noopener">tfpmodelkirovv</a> ·
+          <a href="https://t.me/MSM_tfp_moscow" target="_blank" rel="noopener">MSM_tfp_moscow</a> ·
+          <a href="https://t.me/tfp_photowalk" target="_blank" rel="noopener">tfp_photowalk</a> ·
+          <a href="https://t.me/tfpsertainss" target="_blank" rel="noopener">tfpsertainss</a> ·
+          <a href="https://t.me/tfp_photo_mskpink" target="_blank" rel="noopener">tfp_photo_mskpink</a> ·
+          <a href="https://t.me/modeli_rostovv" target="_blank" rel="noopener">modeli_rostovv</a> ·
+          <a href="https://t.me/TFP_group_Kiev" target="_blank" rel="noopener">TFP_group_Kiev</a> ·
+          <a href="https://t.me/montenegro_photos" target="_blank" rel="noopener">montenegro_photos</a> ·
+          <a href="https://t.me/TFPKievUkr" target="_blank" rel="noopener">TFPKievUkr</a> ·
+          <a href="https://t.me/tfpcemka" target="_blank" rel="noopener">tfpcemka</a> ·
+          <a href="https://t.me/tfp_omsk55" target="_blank" rel="noopener">tfp_omsk55</a> ·
+          <a href="https://t.me/tfpdp" target="_blank" rel="noopener">tfpdp</a> ·
+          <a href="https://t.me/TFP_Fotograf" target="_blank" rel="noopener">TFP_Fotograf</a> ·
+          <a href="https://t.me/modelphuket" target="_blank" rel="noopener">modelphuket</a> ·
+          <a href="https://t.me/tfpallinone" target="_blank" rel="noopener">tfpallinone</a> ·
+          <a href="https://t.me/TVORCHESTVOUFA" target="_blank" rel="noopener">TVORCHESTVOUFA</a> ·
+          <a href="https://t.me/spb_tfp" target="_blank" rel="noopener">spb_tfp</a> ·
+          <a href="https://t.me/tfpOren" target="_blank" rel="noopener">tfpOren</a> ·
+          <a href="https://t.me/TFP_99" target="_blank" rel="noopener">TFP_99</a> ·
+          <a href="https://t.me/minsk_tfp" target="_blank" rel="noopener">minsk_tfp</a> ·
+          <a href="https://t.me/tfp_photohub" target="_blank" rel="noopener">tfp_photohub</a> ·
+          <a href="https://t.me/+NqurqHDP0Yc5MDQy" target="_blank" rel="noopener">+NqurqHDP0Yc5MDQy</a> ·
+          <a href="https://t.me/ishumodelKiev" target="_blank" rel="noopener">ishumodelKiev</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">📄 Анкеты <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>Анкета для операторов (стандартная):</strong></p>
+        <ul>
+          <li>Имя и фамилия</li>
+          <li>Дата рождения</li>
+          <li>Видеокарта</li>
+          <li>Процессор</li>
+          <li>Оперативка и её частота</li>
+          <li>Скорость интернет-соединения (мбит/сек | mbps)</li>
+          <li>Уровень знания английского</li>
+          <li>Номер телефона</li>
+          <li>Username в тг</li>
+          <li>Опыт в адулте</li>
+        </ul>
+        <p><em>Анкета скидывается в случае, если клиент согласился на сотрудничество.</em></p>
+
+        <p><strong>Анкета для моделей:</strong></p>
+        <ul>
+          <li>Имя</li>
+          <li>Город</li>
+          <li>Номер телефона</li>
+          <li>Дата рождения</li>
+          <li>Знания английского от 0 до 10</li>
+          <li>Проживание: одна/не одна</li>
+          <li>Есть 2 мобильных телефона или комп + телефон?</li>
+          <li>Модель устройства</li>
+          <li>Сколько часов и дней в неделю готова уделять работе?</li>
+          <li>Есть наушники?</li>
+          <li>Телеграм для связи</li>
+        </ul>
+        <p>+ 2 фото, в анфас и полный рост.</p>
+        <p><em>Это мы скидываем модели, и после того как она заполнит данные — скидываем их мне.</em></p>
+
+        <p><strong>Бот для вбива анкет:</strong>
+          <a href="https://t.me/vbiver1_bot" target="_blank" rel="noopener">@vbiver1_bot</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">📢 Объявления для рассылки <span class="chev">▼</span></div>
+      <div class="acc-body">
+        <p><strong>Объявление для операторов:</strong></p>
+        <blockquote>
+          🌍 Удалённая работа оператором<br>
+          Ищем ответственных и внимательных сотрудников в онлайн-проект.
+          Работа полностью удалённая — можно из любой точки мира 💻<br>
+          ✨ Условия: формат — дистанционно; график — гибкий (стандарт от 6 часов за смену);
+          обучение 2–3 дня; стажировка 2–3 дня с ежедневной оплатой; карьерный рост.<br>
+          💰 Доход: на старте 500–600$ в месяц, выплаты еженедельно или ежемесячно,
+          в USD/USDT или локальной валюте. С опытом — 800–1200$ + бонусы.<br>
+          📌 Требования: 18–30 лет, русский язык, уверенное владение ПК, понимание железа и софта.<br>
+          🖥 Минимальные требования: Intel i5/i7 (10 gen+) или AMD Ryzen 5 (2600+),
+          GTX 1060 / RTX 2060 и выше, интернет от 100 Мбит/с.
+        </blockquote>
+        <p><em>Скидываете на <a href="https://xjobber.com/" target="_blank" rel="noopener">xjobber.com</a>
+           и на зарубежные доски. Обязательно просите ИИ перефразировать текст без изменения
+           смысла, иначе сайт будет блочить объявления.</em></p>
+
+        <p><strong>Объявление для моделей:</strong></p>
+        <blockquote>
+          🌟 Набор моделей в онлайн-проект 🌍<br>
+          Приглашаем девушек для работы в формате прямых эфиров с зарубежной аудиторией.
+          Работа полностью онлайн — из любой точки мира 💻✨<br>
+          💎 Условия: на старте от 1000$ в первый месяц (30–100$ в день),
+          выплаты ежедневно (РФ — на карту, другие страны — USDT).
+          Формат: прямые эфиры для мужской зарубежной аудитории, лёгкий флирт и общение
+          в рамках законодательства. Контент 18+ с нарушением законов строго запрещён.<br>
+          📌 Требования: 18–27 лет (27–30 — с доп. модерацией), русскоговорящие,
+          техника: смартфон или ПК с веб-камерой, микрофоном и гарнитурой,
+          стабильный интернет, готовность работать от 6 часов в день 4–5 дней в неделю,
+          ухоженный внешний вид.
+        </blockquote>
+        <p><em>Это рассылаем на <a href="https://xjobber.com/" target="_blank" rel="noopener">xjobber.com</a>
+           и по зарубежным доскам. Перед рассылкой — перефразировать через ИИ.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMS -->
+  <section id="forms">
+    <div class="sec-title"><span class="bar"></span>Анкеты и бот</div>
+    <p class="sec-sub">Заполни и отправь куратору</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="ico">🖥</div>
+        <h3>Анкета оператора</h3>
+        <p>Имя, дата рождения, видеокарта, процессор, оперативка, скорость интернета,
+           английский, телефон, Telegram, опыт в адулте.</p>
+        <a href="https://t.me/vbiver1_bot" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:16px;display:inline-block">Заполнить в боте</a>
+      </div>
+      <div class="card">
+        <div class="ico">💃</div>
+        <h3>Анкета модели</h3>
+        <p>Имя, город, телефон, дата рождения, английский, проживание, устройства,
+           часы в неделю, наушники, Telegram + 2 фото (анфас и полный рост).</p>
+        <a href="https://t.me/vbiver1_bot" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:16px;display:inline-block">Заполнить в боте</a>
+      </div>
+      <div class="card">
+        <div class="ico">🤖</div>
+        <h3>Бот для вбива анкет</h3>
+        <p>Бот для вбива анкет моделей и операторов. После заполнения данные
+           автоматически передаются куратору.</p>
+        <a href="https://t.me/vbiver1_bot" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:16px;display:inline-block">Открыть бота</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="logo">𝗣𝗵𝗼𝗲𝗻𝗶𝘅 𝗧𝗲𝗮𝗺</div>
+  <p>Скаутинг · Офферы · Обучение · Пассивный доход</p>
+  <p style="margin-top:8px;font-size:13px">Куратор: <a href="https://t.me/time_1_leader" target="_blank" rel="noopener">@time_1_leader</a></p>
+</footer>
+
+<div id="toast">✅ Ссылка скопирована</div>
+
+<script>
+  // аккордеон
+  document.querySelectorAll('.acc-head').forEach(head => {
+    head.addEventListener('click', () => {
+      const acc = head.parentElement;
+      // закрываем остальные (раскомментируй, если хочешь только один открытый)
+      // document.querySelectorAll('.acc.open').forEach(a => { if(a!==acc) a.classList.remove('open'); });
+      acc.classList.toggle('open');
+    });
+  });
+
+  // плавный скролл с учётом sticky-хедера
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id.length > 1) {
+        const el = document.querySelector(id);
+        if (el) {
+          e.preventDefault();
+          const top = el.getBoundingClientRect().top + window.pageYOffset - 70;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+  // toast (на будущее, можно вешать на кнопки копирования)
+  function showToast(text) {
+    const t = document.getElementById('toast');
+    t.textContent = text || '✅ Готово';
+    t.classList.add('show');
+    clearTimeout(window._toastT);
+    window._toastT = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+</script>
+
+</body>
+</html>
